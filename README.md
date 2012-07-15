@@ -18,15 +18,15 @@ anyBody will detect the content-type of the request and use the appropiate body 
 
     http.createServer(function (req, res) {
         if (req.url === '/json') {
-            jsonBody(req, function (body) {
+            jsonBody(req, res, function (body) {
                 res.end(JSON.stringify(body))
             })
         } else if (req.url === '/form') {
-            formbody(req, function (body) {
+            formbody(req, res, function (body) {
                 res.end(JSON.stringify(body))
             })
         } else if (req.url === '/any') {
-            anyBody(req, function (body) {
+            anyBody(req, res, function (body) {
                 res.end(JSON.stringify(body))
             })
         } else {
@@ -38,17 +38,17 @@ anyBody will detect the content-type of the request and use the appropiate body 
 
 ## Example with custom error handling
 
-    var body = require("routil-body")({
+    var jsonBody = require("routil-body")({
             errorPage: function (req, res, errorData) {
                 // errorData is either a single value or an array of values
                 // the values are either a number for the HTTP response code
                 // or an object error object
             }
-        }).body
+        }).jsonBody
         , http = require('http')
 
     http.createServer(function (req, res) {
-        body(req, function (body) { res.end(body) })
+        jsonBody(req, function (body) { res.end(body) })
     }).listen(8080)
 
 ## Installation
