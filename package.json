@@ -1,0 +1,39 @@
+{
+  "name": "routil-body",
+  "version": "0.0.1",
+  "description": "Body parsing",
+  "keywords": [],
+  "author": "Raynos <raynos2@gmail.com>",
+  "repository": "git://github.com/Raynos/routil-body.git",
+  "main": "index",
+  "homepage": "https://github.com/Raynos/routil-body",
+  "contributors": [
+    {
+      "name": "Jake Verbaten"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Raynos/routil-body/issues",
+    "email": "raynos2@gmail.com"
+  },
+  "dependencies": {
+    "routil": "0.0.14"
+  },
+  "devDependencies": {
+    "testling": "git://github.com/Raynos/testling#master",
+    "testem": "git://github.com/Raynos/testem#master",
+    "sinon": "1.4.2",
+    "tap": "0.2.5",
+    "after": "~0.6.0",
+    "test-server": "0.0.1"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Raynos/routil-body/raw/master/LICENSE"
+    }
+  ],
+  "scripts": {
+    "test": "make node-test"
+  }
+}
