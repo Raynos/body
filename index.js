@@ -19,7 +19,8 @@ function Body(options) {
     }
 
     function formBody(req, res, callback)  {
-        if (!req.headers['content-type'].match(isForm)) {
+        var contentType = req.headers['content-type'] || ""
+        if (!contentType.match(isForm)) {
             // XXX Add support for formidable uploading, as well
             return errorPage(req, res, 415)
         }
@@ -31,7 +32,8 @@ function Body(options) {
     }
 
     function jsonBody(req, res, callback) {
-        if (!req.headers["content-type"].match(isJSON)) {
+        var contentType = req.headers['content-type'] || ""
+        if (!contentType.match(isJSON)) {
             return errorPage(req, res, 415)
         }
         body(req, extractJSON)
