@@ -1,66 +1,16 @@
 var StringDecoder = require("string_decoder").StringDecoder
     , querystring = require("querystring")
-    , routil = require("routil")
-    , routilErrorPage = routil.errorPage
-    , contentTypes = routil.contentTypes
-    , isJSON = /\/(x-)?json$/
-    , isForm = /application\/x\-www\-form\-urlencoded/
+    , contentTypes = require("content-types")
 
-module.exports = Body
+body.form = formBody
+body.json = jsonBody
+body.any = anyBody
 
-function Body(options) {
-    var errorPage = routilErrorPage || options.errorPage
+module.exports = body
 
-    return {
-        body: body,
-        formBody: formBody,
-        jsonBody: jsonBody,
-        anyBody: anyBody
-    }
-
-    function formBody(req, res, callback)  {
-        var contentType = req.headers['content-type'] || ""
-        if (!contentType.match(isForm)) {
-            // XXX Add support for formidable uploading, as well
-            return errorPage(req, res, 415)
-        }
-        body(req, parseBody)
-
-        function parseBody(body) {
-            callback(querystring.parse(body))
-        }
-    }
-
-    function jsonBody(req, res, callback) {
-        var contentType = req.headers['content-type'] || ""
-        if (!contentType.match(isJSON)) {
-            return errorPage(req, res, 415)
-        }
-        body(req, extractJSON)
-
-        function extractJSON(body) {
-            var json
-            try {
-                json = JSON.parse(body)
-            } catch (error) {
-                return errorPage(req, res, [400, error])
-            }
-            callback(json)
-        }
-    }
-
-    function anyBody(req, res, callback) {
-        contentTypes(req, {
-            "application/json": jsonBody,
-            "application/x-www-form-urlencoded": formBody,
-            "default": defaultAnyBodyHandler
-        })(req, res, callback)
-    }
-}
-
-function body(req, callback) {
-    if (req.__routil_body__) {
-        callback(req.__routil_body__)
+function body(req, res, callback) {
+    if (req.__body__) {
+        callback(req.__body__)
     }
 
     var requestBody = "",
@@ -75,11 +25,37 @@ function body(req, callback) {
     }
 
     function returnBody() {
-        req.__routil_body__ = requestBody
-        callback(requestBody)
+        req.__body__ = requestBody
+        callback(null, requestBody)
     }
 }
 
-function defaultAnyBodyHandler(req, res, callback) {
-    body(req, callback)
+function anyBody(req, res, callback) {
+    contentTypes(req, res, {
+        "application/json": jsonBody,
+        "application/x-www-form-urlencoded": formBody,
+        "default": body
+    })(req, res, callback)
+}
+
+function formBody(req, res, callback)  {
+    body(req, res, parseBody)
+
+    function parseBody(err, body) {
+        callback(null, querystring.parse(body))
+    }
+}
+
+function jsonBody(req, res, callback) {
+    body(req, res, extractJSON)
+
+    function extractJSON(err, body) {
+        var json
+        try {
+            json = JSON.parse(body)
+        } catch (error) {
+            return callback(error)
+        }
+        callback(null, json)
+    }
 }

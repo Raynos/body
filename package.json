@@ -1,39 +1,37 @@
 {
-  "name": "routil-body",
+  "name": "body",
   "version": "0.0.2",
   "description": "Body parsing",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/Raynos/routil-body.git",
+  "repository": "git://github.com/Raynos/body.git",
   "main": "index",
-  "homepage": "https://github.com/Raynos/routil-body",
+  "homepage": "https://github.com/Raynos/body",
   "contributors": [
     {
       "name": "Jake Verbaten"
     }
   ],
   "bugs": {
-    "url": "https://github.com/Raynos/routil-body/issues",
+    "url": "https://github.com/Raynos/body/issues",
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "routil": "0.0.14"
+    "content-types": "~0.1.0"
   },
   "devDependencies": {
-    "testling": "git://github.com/Raynos/testling#master",
-    "testem": "git://github.com/Raynos/testem#master",
-    "sinon": "1.4.2",
     "tap": "0.2.5",
     "after": "~0.6.0",
-    "test-server": "0.0.1"
+    "test-server": "0.0.1",
+    "send-data": "~0.1.0"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/Raynos/routil-body/raw/master/LICENSE"
+      "url": "http://github.com/Raynos/body/raw/master/LICENSE"
     }
   ],
   "scripts": {
-    "test": "make node-test"
+    "test": "tap --stderr --tap ./test"
   }
 }

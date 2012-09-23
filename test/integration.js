@@ -1,31 +1,30 @@
 var testServer = require("test-server")
-    , test = require("testling")
-    , routilBody = require("..")()
-    , body = routilBody.body
-    , formBody = routilBody.formBody
-    , jsonBody = routilBody.jsonBody
-    , anyBody = routilBody.anyBody
-    , sendJson = require("routil").sendJson
+    , test = require("tap").test
+    , body = require("../index")
+    , formBody = body.form
+    , jsonBody = body.json
+    , anyBody = body.any
+    , sendJson = require("send-data").json
     , after = require("after")
 
 testServer(handleRequest, runTests)
 
 function handleRequest(req, res) {
     if (req.url === "/body") {
-        body(req, function (body) {
-            sendJson(res, body)
+        body(req, res, function (err, body) {
+            sendJson(req, res, body)
         })
     } else if (req.url === "/form") {
-        formBody(req, res, function (body) {
-            sendJson(res, body)
+        formBody(req, res, function (err, body) {
+            sendJson(req, res, body)
         })
     } else if (req.url === "/json") {
-        jsonBody(req, res, function (body) {
-            sendJson(res, body)
+        jsonBody(req, res, function (err, body) {
+            sendJson(req, res, body)
         })
     } else if (req.url === "/any") {
-        anyBody(req, res, function (body) {
-            sendJson(res, body)
+        anyBody(req, res, function (err, body) {
+            sendJson(req, res, body)
         })
     }
 }

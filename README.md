@@ -1,63 +1,49 @@
-# routil-body [![build status][1]][2]
+# body [![build status][1]][2]
 
 Body parsing
 
 ## Example
 
-`body` simply parses the request body and returns it in the callback. `jsonBody` and `formBody` call JSON.parse and querystring.parse respectively on the body. 
+```
+var body = require("body")
+    , jsonBody = body.json
+    , formBody = body.form
+    , anyBody = body.any
+    , http = require("http")
+    , sendJson = require("send-data").json
+
+http.createServer(function handleRequest(req, res) {
+    if (req.url === "/body") {
+        body(req, res, function (err, body) {
+            sendJson(req, res, body)
+        })
+    } else if (req.url === "/form") {
+        formBody(req, res, function (err, body) {
+            sendJson(req, res, body)
+        })
+    } else if (req.url === "/json") {
+        jsonBody(req, res, function (err, body) {
+            sendJson(req, res, body)
+        })
+    } else if (req.url === "/any") {
+        anyBody(req, res, function (err, body) {
+            sendJson(req, res, body)
+        })
+    }
+})
+```
+
+`body` simply parses the request body and returns it in the callback. `jsonBody` and `formBody` call JSON.parse and querystring.parse respectively on the body.
 
 anyBody will detect the content-type of the request and use the appropiate body method.
 
-    var Body = require("routil-body")
-        , bodyParser = Body()
-        , body = bodyParser.body
-        , formBody = bodyParser.formBody
-        , jsonBody = bodyParser.jsonBody
-        , anyBody = bodyParser.anyBody
-        , http = require("http")
-
-    http.createServer(function (req, res) {
-        if (req.url === '/json') {
-            jsonBody(req, res, function (body) {
-                res.end(JSON.stringify(body))
-            })
-        } else if (req.url === '/form') {
-            formbody(req, res, function (body) {
-                res.end(JSON.stringify(body))
-            })
-        } else if (req.url === '/any') {
-            anyBody(req, res, function (body) {
-                res.end(JSON.stringify(body))
-            })
-        } else {
-            body(req, function (body) {
-                res.end(body.toString())
-            })
-        }
-    }).listen(8080)
-
-## Example with custom error handling
-
-    var jsonBody = require("routil-body")({
-            errorPage: function (req, res, errorData) {
-                // errorData is either a single value or an array of values
-                // the values are either a number for the HTTP response code
-                // or an object error object
-            }
-        }).jsonBody
-        , http = require('http')
-
-    http.createServer(function (req, res) {
-        jsonBody(req, function (body) { res.end(body) })
-    }).listen(8080)
-
 ## Installation
 
-`npm install routil-body`
+`npm install body`
 
 ## Tests
 
-`make test`
+`npm test`
 
 ## Contributors
 
@@ -65,5 +51,5 @@ anyBody will detect the content-type of the request and use the appropiate body 
 
 ## MIT Licenced
 
-  [1]: https://secure.travis-ci.org/Raynos/routil-body.png
-  [2]: http://travis-ci.org/Raynos/routil-body
+  [1]: https://secure.travis-ci.org/Raynos/body.png
+  [2]: http://travis-ci.org/Raynos/body
