@@ -4,31 +4,27 @@ Body parsing
 
 ## Example
 
-```
+```js
 var body = require("body")
-    , jsonBody = body.json
-    , formBody = body.form
-    , anyBody = body.any
-    , http = require("http")
-    , sendJson = require("send-data").json
+var jsonBody = require("body/json")
+var formBody = require("body/form")
+var anyBody = require("body/any")
+var http = require("http")
+var sendJson = require("send-data/json")
 
 http.createServer(function handleRequest(req, res) {
+    function send(err, body) {
+        sendJson(req, res, body)
+    }
+
     if (req.url === "/body") {
-        body(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        body(req, res)(send)
     } else if (req.url === "/form") {
-        formBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        formBody(req, res)(send)
     } else if (req.url === "/json") {
-        jsonBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        jsonBody(req, res)(send)
     } else if (req.url === "/any") {
-        anyBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        anyBody(req, res)(send)
     }
 })
 ```

@@ -1,31 +1,28 @@
 var testServer = require("test-server")
-    , test = require("tap").test
-    , body = require("../index")
-    , formBody = body.form
-    , jsonBody = body.json
-    , anyBody = body.any
-    , sendJson = require("send-data").json
-    , after = require("after")
+var test = require("tape")
+var sendJson = require("send-data/json")
+var after = require("after")
+
+var body = require("../index")
+var jsonBody = require("../json")
+var formBody = require("../form")
+var anyBody = require("../any")
 
 testServer(handleRequest, runTests)
 
 function handleRequest(req, res) {
+    function send(err, body) {
+        sendJson(req, res, body)
+    }
+
     if (req.url === "/body") {
-        body(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        body(req, res)(send)
     } else if (req.url === "/form") {
-        formBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        formBody(req, res)(send)
     } else if (req.url === "/json") {
-        jsonBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        jsonBody(req, res)(send)
     } else if (req.url === "/any") {
-        anyBody(req, res, function (err, body) {
-            sendJson(req, res, body)
-        })
+        anyBody(req, res)(send)
     }
 }
 
