@@ -17,7 +17,6 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "continuable": "git://github.com/Raynos/continuable",
     "qs": "~0.6.1"
   },
   "devDependencies": {
