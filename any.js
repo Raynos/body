@@ -1,3 +1,5 @@
+var maybeCallback = require("continuable/maybe-callback")
+
 var body = require("./index")
 var jsonBody = require("./json")
 var formBody = require("./form")
@@ -5,8 +7,10 @@ var formBody = require("./form")
 var jsonType = "application/json"
 var formType = "application/x-www-form-urlencoded"
 
-module.exports = anyBody
+module.exports = maybeCallback(anyBody)
 
+//  anyBody := (req: HttpRequest, res: HttpResponse)
+//      => Continuable<Any>
 function anyBody(req, res) {
     var contentType = req.headers["content-type"] || ""
 

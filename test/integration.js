@@ -16,13 +16,13 @@ function handleRequest(req, res) {
     }
 
     if (req.url === "/body") {
-        body(req, res)(send)
+        body(req, res, send)
     } else if (req.url === "/form") {
         formBody(req, res)(send)
     } else if (req.url === "/json") {
         jsonBody(req, res)(send)
     } else if (req.url === "/any") {
-        anyBody(req, res)(send)
+        anyBody(req, res, send)
     }
 }
 

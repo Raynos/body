@@ -17,7 +17,8 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "qs": "~0.6.1"
+    "qs": "~0.6.1",
+    "continuable": "~0.2.3"
   },
   "devDependencies": {
     "tap": "0.2.5",

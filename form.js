@@ -1,12 +1,15 @@
 var querystring = require("qs")
+var map = require("continuable/map")
+var maybeCallback = require("continuable/maybe-callback")
+
 var body = require("./index")
 
-module.exports = formBody
+var asForm = map(querystring.parse)
 
+module.exports = maybeCallback(formBody)
+
+//  formBody := (req: HttpRequest, res: HttpResponse)
+//      => Continuable<Object>
 function formBody(req, res) {
-    return function continuable(callback) {
-        body(req, res)(function (_, body) {
-            callback(null, querystring.parse(body))
-        })
-    }
+    return asForm(body(req, res))
 }
