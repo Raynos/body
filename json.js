@@ -8,7 +8,9 @@ module.exports = maybeCallback(jsonBody)
 //      => Continuable<Any>
 function jsonBody(req, res) {
     return function continuable(cb) {
-        body(req, res)(function (_, body) {
+        body(req, res)(function (err, body) {
+            if (err) return cb(err)
+
             var json
             try {
                 json = JSON.parse(body)

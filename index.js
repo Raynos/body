@@ -9,11 +9,24 @@ function body(req) {
         var requestBody = ""
         var stringDecoder = new StringDecoder()
 
-        req.on("data", function addToBody(buffer) {
+        function addToBody(buffer) {
             requestBody += stringDecoder.write(buffer)
-        })
-        req.on("end", function returnBody() {
+        }
+        function returnBody() {
+            cleanup()
             callback(null, requestBody)
-        })
+        }
+        function onError(err) {
+            cleanup()
+            callback(err)
+        }
+        function cleanup() {
+            req.removeListener("data", addToBody)
+            req.removeListener("end", returnBody)
+            req.removeListener("error", onError)
+        }
+        req.on("data", addToBody)
+        req.on("end", returnBody)
+        req.on("error", onError)
     }
 }
