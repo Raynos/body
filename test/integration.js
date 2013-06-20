@@ -12,6 +12,10 @@ testServer(handleRequest, runTests)
 
 function handleRequest(req, res) {
     function send(err, body) {
+        if (err) {
+            return sendJson(req, res, err.message)
+        }
+
         sendJson(req, res, body)
     }
 
@@ -30,7 +34,15 @@ function runTests(request, done) {
     test("body works", function (t) {
         t.end = after(2, t.end.bind(t))
         testBody("/body", request, t)
-        testBody("/any", request, t)
+
+        request({
+            uri: "/any",
+            body: "foo"
+        }, function (err, res, body) {
+            t.equal(err, null)
+            t.equal(JSON.parse(body), "could not parse content type header")
+            t.end()
+        })
     })
 
     test("form works", function (t) {
@@ -50,8 +62,8 @@ function runTests(request, done) {
 
 function testBody(uri, request, t) {
     request({
-        uri: uri
-        , body: "foo"
+        uri: uri,
+        body: "foo"
     }, function (err, res, body) {
         t.equal(err, null, "error is not null")
 
@@ -63,8 +75,8 @@ function testBody(uri, request, t) {
 
 function testFormBody(uri, request, t) {
     request({
-        uri: uri
-        , form: {
+        uri: uri,
+        form: {
             foo: "bar"
         }
     }, function (err, res, body) {
@@ -78,8 +90,8 @@ function testFormBody(uri, request, t) {
 
 function testJsonBody(uri, request, t) {
     request({
-        uri: uri
-        , json: {
+        uri: uri,
+        json: {
             foo: "bar"
         }
     }, function (err, res, body) {

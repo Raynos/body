@@ -1,6 +1,6 @@
 var maybeCallback = require("continuable/maybe-callback")
+var error = require("continuable/error")
 
-var body = require("./index")
 var jsonBody = require("./json")
 var formBody = require("./form")
 
@@ -19,6 +19,6 @@ function anyBody(req, res) {
     } else if (contentType.indexOf(formType) !== -1) {
         return formBody(req, res)
     } else {
-        return body(req, res)
+        return error(new Error("could not parse content type header"))
     }
 }
