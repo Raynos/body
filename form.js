@@ -4,8 +4,13 @@ var body = require("./index")
 
 module.exports = formBody
 
-function formBody(req, res, callback) {
-    body(req, res, function (err, body) {
+function formBody(req, res, opts, callback) {
+    if (typeof opts === "function") {
+        callback = opts
+        opts = {}
+    }
+
+    body(req, res, opts, function (err, body) {
         if (err) {
             return callback(err)
         }

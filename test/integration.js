@@ -40,7 +40,7 @@ function runTests(request, done) {
             body: "foo"
         }, function (err, res, body) {
             t.equal(err, null)
-            t.equal(JSON.parse(body), "could not parse content type header")
+            t.equal(JSON.parse(body), "Could not parse content type header: ")
             t.end()
         })
     })

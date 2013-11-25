@@ -2,19 +2,24 @@ var body = require("./index")
 
 module.exports = jsonBody
 
-function jsonBody(req, res, cb) {
-    body(req, res, function (err, body) {
+function jsonBody(req, res, opts, callback) {
+    if (typeof opts === "function") {
+        callback = opts
+        opts = {}
+    }
+
+    body(req, res, opts, function (err, body) {
         if (err) {
-            return cb(err)
+            return callback(err)
         }
 
         var json
         try {
             json = JSON.parse(body)
         } catch (error) {
-            return cb(error)
+            return callback(error)
         }
 
-        cb(null, json)
+        callback(null, json)
     })
 }
