@@ -47,7 +47,7 @@ function body(req, res, opts, callback) {
 
     function onEnd() {
         cleanup()
-        requestBody += stringDecoder.end()
+        requestBody += endStringDecoder(stringDecoder)
 
         if (contentLength && contentLength !== received) {
             return callback(REQUEST_SIZE_INVALID(received))
@@ -66,4 +66,22 @@ function body(req, res, opts, callback) {
         req.removeListener("end", onEnd)
         req.removeListener("error", onError)
     }
+}
+
+// bug fix for missing `StringDecoder.end` in v0.8.x
+function endStringDecoder(decoder) {
+    if (decoder.end) {
+        return decoder.end()
+    }
+
+    var res = ""
+
+    if (decoder.charReceived) {
+        var cr = decoder.charReceived
+        var buf = decoder.charBuffer
+        var enc = decoder.encoding
+        res += buf.slice(0, cr).toString(enc)
+    }
+
+    return res
 }
