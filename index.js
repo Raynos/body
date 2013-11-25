@@ -1,32 +1,33 @@
 var StringDecoder = require("string_decoder").StringDecoder
-var maybeCallback = require("continuable/maybe-callback")
 
-module.exports = maybeCallback(body)
+module.exports = body
 
-// body := (req: HttpRequest) => Continuable<Buffer>
-function body(req) {
-    return function continuable(callback) {
-        var requestBody = ""
-        var stringDecoder = new StringDecoder()
+function body(req, res, callback) {
+    var requestBody = ""
+    var stringDecoder = new StringDecoder()
 
-        function addToBody(buffer) {
-            requestBody += stringDecoder.write(buffer)
-        }
-        function returnBody() {
-            cleanup()
-            callback(null, requestBody)
-        }
-        function onError(err) {
-            cleanup()
-            callback(err)
-        }
-        function cleanup() {
-            req.removeListener("data", addToBody)
-            req.removeListener("end", returnBody)
-            req.removeListener("error", onError)
-        }
-        req.on("data", addToBody)
-        req.on("end", returnBody)
-        req.on("error", onError)
+    req.on("data", onData)
+    req.on("end", onEnd)
+    req.on("error", onError)
+
+    function onData(buffer) {
+        requestBody += stringDecoder.write(buffer)
+    }
+
+    function onEnd() {
+        cleanup()
+        requestBody += stringDecoder.end()
+        callback(null, requestBody)
+    }
+
+    function onError(err) {
+        cleanup()
+        callback(err)
+    }
+
+    function cleanup() {
+        req.removeListener("data", onData)
+        req.removeListener("end", onEnd)
+        req.removeListener("error", onError)
     }
 }
