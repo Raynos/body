@@ -20,13 +20,17 @@ http.createServer(function handleRequest(req, res) {
     }
 
     if (req.url === "/body") {
-        textBody(req, res, send)
+        // all functions can be called with (req, cb)
+        textBody(req, send)
     } else if (req.url === "/form") {
-        formBody(req, res, send)
+        // all functions can be called with (req, opts, cb)
+        formBody(req, {}, send)
     } else if (req.url === "/json") {
+        // all functions can be called with (req, res, cb)
         jsonBody(req, res, send)
     } else if (req.url === "/any") {
-        anyBody(req, res, send)
+        // all functions can be called with (req, res, opts, cb)
+        anyBody(req, res, {}, send)
     }
 })
 ```
@@ -83,12 +87,12 @@ http.createServer(app).listen(8080)
 
 ## Documentation
 
-### `textBody(req, res, opts?, cb<Error, String>)`
+### `textBody(req, res?, opts?, cb<Error, String>)`
 
 ```ocaml
 textBody := (
     req: HttpRequest,
-    res: HttpResponse,
+    res?: HttpResponse,
     opts?: {
         limit?: Number,
         encoding?: String
@@ -128,12 +132,12 @@ http.createServer(function (req, res) {
 }).listen(8080)
 ```
 
-### `formBody(req, res, opts?, cb<Error, Any>)`
+### `formBody(req, res?, opts?, cb<Error, Any>)`
 
 ```ocaml
 formBody := (
     req: HttpRequest,
-    res: HttpResponse,
+    res?: HttpResponse,
     opts?: {
         limit?: Number,
         encoding?: String,
@@ -172,12 +176,12 @@ http.createServer(function (req, res) {
 }).listen(8080)
 ```
 
-### `jsonBody(req, res, opts?, cb<Error, Any>)`
+### `jsonBody(req, res?, opts?, cb<Error, Any>)`
 
 ```ocaml
 jsonBody := (
     req: HttpRequest,
-    res: HttpResponse,
+    res?: HttpResponse,
     opts?: {
         limit?: Number,
         encoding?: String,
@@ -223,12 +227,12 @@ http.createServer(function (req, res) {
 }).listen(8080)
 ```
 
-### `anyBody(req, res, opts?, cb<Error, Any>)`
+### `anyBody(req, res?, opts?, cb<Error, Any>)`
 
 ```ocaml
 anyBody := (
     req: HttpRequest,
-    res: HttpResponse,
+    res?: HttpResponse,
     opts?: {
         limit?: Number,
         encoding?: String,
