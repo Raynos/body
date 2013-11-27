@@ -1,4 +1,5 @@
 var body = require("./index")
+var jsonParse = require("safe-json-parse")
 
 module.exports = jsonBody
 
@@ -8,18 +9,14 @@ function jsonBody(req, res, opts, callback) {
         opts = {}
     }
 
+    var parse = opts.JSON ? opts.JSON.parse : jsonParse
+    var reviver = opts.reviver || null
+
     body(req, res, opts, function (err, body) {
         if (err) {
             return callback(err)
         }
 
-        var json
-        try {
-            json = JSON.parse(body)
-        } catch (error) {
-            return callback(error)
-        }
-
-        callback(null, json)
+        parse(body, reviver, callback)
     })
 }

@@ -16,6 +16,6 @@ function body(req, res, opts, callback) {
     rawBody(req, {
         limit: limit,
         length: contentLength,
-        encoding: true
+        encoding: "encoding" in opts ? opts.encoding : true
     }, callback)
 }

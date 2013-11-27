@@ -1,4 +1,4 @@
-var querystring = require("qs")
+var querystringParse = require("querystring").parse
 
 var body = require("./index")
 
@@ -10,11 +10,13 @@ function formBody(req, res, opts, callback) {
         opts = {}
     }
 
+    var parse = opts.querystring ? opts.querystring.parse : querystringParse
+
     body(req, res, opts, function (err, body) {
         if (err) {
             return callback(err)
         }
 
-        callback(null, querystring.parse(body))
+        callback(null, parse(body))
     })
 }
