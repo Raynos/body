@@ -16,13 +16,18 @@ function formBody(req, res, opts, callback) {
         return formBody.bind(null, req, res, opts)
     }
 
-    var parse = opts.querystring ? opts.querystring.parse : querystringParse
+    var parse = opts.querystring ?
+        opts.querystring.parse : defaultQueryStringParse
 
     body(req, res, opts, function (err, body) {
         if (err) {
             return callback(err)
         }
 
-        callback(null, parse(body))
+        parse(body, callback)
     })
+}
+
+function defaultQueryStringParse(str, callback) {
+    callback(null, querystringParse(str))
 }

@@ -141,7 +141,9 @@ formBody := (
     opts?: {
         limit?: Number,
         encoding?: String,
-        querystring: { parse: (String) => Any }
+        querystring: {
+            parse: (String, Callback<Error, Any>) => void
+        }
     },
     cb: Callback<err: Error, bodyPayload: Any>
 ) => void
@@ -155,7 +157,8 @@ encoded and parses just like it was a &lt;form&gt; submit.
  - `encoding`: same as `textBody`
  - `querystring`: You can pass a custom querystring parser if 
     you want. It should have a `parse` method that takes a 
-    string and returns the parsed data
+    string and a callback. It should return the value in the
+    callback or a parsing error
 
 ```js
 var formBody = require("body/form")
@@ -240,7 +243,9 @@ anyBody := (
         JSON?: {
             parse: (String, reviver?: Function, Callback<Error, Any>) => void
         },
-        querystring: { parse: (String) => Any }
+        querystring: {
+            parse: (String, Callback<Error, Any>) => void
+        }
     },
     cb: Callback<err: Error, bodyPayload: Any>
 ) => void
