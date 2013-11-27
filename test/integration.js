@@ -67,6 +67,7 @@ function testBody(uri, request, t) {
     }, function (err, res, body) {
         t.equal(err, null, "error is not null")
 
+        console.log("body", body, JSON.parse(body))
         t.equal(JSON.parse(body), "foo", "body is incorrect")
 
         t.end()
