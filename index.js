@@ -18,7 +18,7 @@ function body(req, res, opts, callback) {
     }
 
     var limit = "limit" in opts ? opts.limit : ONE_MB
-    var contentLength = Number(req.headers["content-length"] || "")
+    var contentLength = Number(req.headers["content-length"])
 
     rawBody(req, {
         limit: limit,
