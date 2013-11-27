@@ -1,14 +1,16 @@
 var querystringParse = require("querystring").parse
 
-var body = require("./index")
+var body = require("./index.js")
+var parseArguments = require("./parse-arguments.js")
 
 module.exports = formBody
 
 function formBody(req, res, opts, callback) {
-    if (typeof opts === "function") {
-        callback = opts
-        opts = {}
-    }
+    var args = parseArguments(req, res, opts, callback)
+    req = args.req
+    res = args.res
+    opts = args.opts
+    callback = args.callback
 
     if (!callback) {
         return formBody.bind(null, req, res, opts)

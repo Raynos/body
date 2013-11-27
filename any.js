@@ -1,7 +1,8 @@
 var TypedError = require("error/typed")
 
-var jsonBody = require("./json")
-var formBody = require("./form")
+var parseArguments = require("./parse-arguments.js")
+var jsonBody = require("./json.js")
+var formBody = require("./form.js")
 
 var jsonType = "application/json"
 var formType = "application/x-www-form-urlencoded"
@@ -14,10 +15,11 @@ var INVALID_CONTENT_TYPE = TypedError({
 module.exports = anyBody
 
 function anyBody(req, res, opts, callback) {
-    if (typeof opts === "function") {
-        callback = opts
-        opts = {}
-    }
+    var args = parseArguments(req, res, opts, callback)
+    req = args.req
+    res = args.res
+    opts = args.opts
+    callback = args.callback
 
     if (!callback) {
         return anyBody.bind(null, req, res, opts)

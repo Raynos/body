@@ -1,13 +1,16 @@
-var body = require("./index")
 var jsonParse = require("safe-json-parse")
+
+var body = require("./index.js")
+var parseArguments = require("./parse-arguments.js")
 
 module.exports = jsonBody
 
 function jsonBody(req, res, opts, callback) {
-    if (typeof opts === "function") {
-        callback = opts
-        opts = {}
-    }
+    var args = parseArguments(req, res, opts, callback)
+    req = args.req
+    res = args.res
+    opts = args.opts
+    callback = args.callback
 
     if (!callback) {
         return jsonBody.bind(null, req, res, opts)

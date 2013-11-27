@@ -1,14 +1,17 @@
 var rawBody = require("raw-body")
 
+var parseArguments = require("./parse-arguments.js")
+
 var ONE_MB = 1024 * 1024
 
 module.exports = body
 
 function body(req, res, opts, callback) {
-    if (typeof opts === "function") {
-        callback = opts
-        opts = {}
-    }
+    var args = parseArguments(req, res, opts, callback)
+    req = args.req
+    res = args.res
+    opts = args.opts
+    callback = args.callback
 
     if (!callback) {
         return body.bind(null, req, res, opts)
