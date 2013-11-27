@@ -10,6 +10,10 @@ function body(req, res, opts, callback) {
         opts = {}
     }
 
+    if (!callback) {
+        return body.bind(null, req, res, opts)
+    }
+
     var limit = "limit" in opts ? opts.limit : ONE_MB
     var contentLength = Number(req.headers["content-length"] || "")
 

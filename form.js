@@ -10,6 +10,10 @@ function formBody(req, res, opts, callback) {
         opts = {}
     }
 
+    if (!callback) {
+        return formBody.bind(null, req, res, opts)
+    }
+
     var parse = opts.querystring ? opts.querystring.parse : querystringParse
 
     body(req, res, opts, function (err, body) {

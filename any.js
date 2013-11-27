@@ -19,6 +19,10 @@ function anyBody(req, res, opts, callback) {
         opts = {}
     }
 
+    if (!callback) {
+        return anyBody.bind(null, req, res, opts)
+    }
+
     var contentType = req.headers["content-type"] || ""
 
     if (contentType.indexOf(jsonType) !== -1) {

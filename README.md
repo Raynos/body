@@ -35,6 +35,52 @@ http.createServer(function handleRequest(req, res) {
 
 anyBody will detect the content-type of the request and use the appropiate body method.
 
+## Example generators
+
+You can use `body` with generators as the body functions will
+    return a continuable if you don't pass a callback.
+
+```js
+var http = require("http")
+var Router = require("routes-router")
+var jsonBody = require("body/json")
+var formBody = require("body/form")
+// async turns a generator into an async function taking a cb
+var async = require("gens")
+
+// the router works with normal async functions.
+// router automatically handles errors as 500 responses
+var app = Router({
+    // do whatever you want. the jsonBody error would go here
+    errorHandler: function (req, res, err) {
+        res.statusCode = 500
+        res.end(err.message)
+    }
+})
+
+app.addRoute("/json", async(function* (req, res) {
+    // if jsonBody has an error it just goes to the cb
+    // in the called in the router. and it does the correct thing
+    // it shows your 500 page.
+    var body = yield jsonBody(req, res)
+
+    res.setHeader("content-type", "application/json")
+    res.end(JSON.stringify(body))
+}))
+
+app.addRoute("/form", async(function* (req, res) {
+    var body = yield formBody(req, res)
+
+    res.setHeader("content-type", "application/json")
+    res.end(JSON.stringify(body))
+}))
+
+// app returned from the router is just a function(req, res) {}
+// that dispatches the req/res to the correct route based on
+// the routers routing table & req.url
+http.createServer(app).listen(8080)
+```
+
 ## Documentation
 
 ### `textBody(req, res, opts?, cb<Error, String>)`

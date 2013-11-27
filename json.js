@@ -9,6 +9,10 @@ function jsonBody(req, res, opts, callback) {
         opts = {}
     }
 
+    if (!callback) {
+        return jsonBody.bind(null, req, res, opts)
+    }
+
     var parse = opts.JSON ? opts.JSON.parse : jsonParse
     var reviver = opts.reviver || null
 
