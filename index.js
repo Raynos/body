@@ -21,9 +21,26 @@ function body(req, res, opts, callback) {
     var contentLength = req.headers ?
         Number(req.headers["content-length"]) : null;
 
+    if (opts.cache && req.__rawBody__) {
+        process.nextTick(function() {
+            callback(null, req.__rawBody__);
+        });
+        return;
+    }
+
     rawBody(req, {
         limit: limit,
         length: contentLength,
         encoding: "encoding" in opts ? opts.encoding : true
-    }, callback)
+    }, function onRawBody(err, string) {
+        if (!err && opts.cache) {
+            Object.defineProperty(req, '__rawBody__', {
+                configurable: true,
+                enumerable: false,
+                value: string
+            });
+        }
+
+        callback(err, string);
+    });
 }
