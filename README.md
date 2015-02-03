@@ -95,6 +95,7 @@ textBody := (
     res?: HttpResponse,
     opts?: {
         limit?: Number,
+        cache?: Boolean,
         encoding?: String
     },
     cb: Callback<err: Error, bodyPayload: String>
