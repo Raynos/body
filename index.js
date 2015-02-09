@@ -1,11 +1,26 @@
 var rawBody = require("raw-body")
+var cache = require("continuable-cache")
 
 var parseArguments = require("./parse-arguments.js")
 
 var ONE_MB = 1024 * 1024
-var RAW_BODY_EVENT = '__rawBodyRead__';
+var THUNK_KEY = '__npm_body_thunk_cache__';
 
 module.exports = body
+
+function parseBodyThunk(req, res, opts) {
+    return function thunk(callback) {
+        var limit = "limit" in opts ? opts.limit : ONE_MB
+        var contentLength = req.headers ?
+            Number(req.headers["content-length"]) : null;
+
+        rawBody(req, {
+            limit: limit,
+            length: contentLength,
+            encoding: "encoding" in opts ? opts.encoding : true
+        }, callback);
+    };
+}
 
 function body(req, res, opts, callback) {
     var args = parseArguments(req, res, opts, callback)
@@ -14,45 +29,19 @@ function body(req, res, opts, callback) {
     opts = args.opts
     callback = args.callback
 
-    if (!callback) {
-        return body.bind(null, req, res, opts)
-    }
-
-    var limit = "limit" in opts ? opts.limit : ONE_MB
-    var contentLength = req.headers ?
-        Number(req.headers["content-length"]) : null;
+    var thunk;
 
     if (opts.cache) {
-        if (req.__rawBody__) {
-            process.nextTick(function() {
-                callback(null, req.__rawBody__);
-            });
-            return;
-        }
-
-        if (req.listeners(RAW_BODY_EVENT).length > 0) {
-            req.on(RAW_BODY_EVENT, callback);
-            return;
-        }
+        var thunk = req[THUNK_KEY] ||
+            cache(parseBodyThunk(req, res, opts));
+        req[THUNK_KEY] = thunk;
+    } else {
+        thunk = parseBodyThunk(req, res, opts);
     }
 
-    req.on(RAW_BODY_EVENT, callback);
+    if (!callback) {
+        return thunk;
+    }
 
-    rawBody(req, {
-        limit: limit,
-        length: contentLength,
-        encoding: "encoding" in opts ? opts.encoding : true
-    }, function onRawBody(err, string) {
-        if (!err && opts.cache) {
-            Object.defineProperty(req, '__rawBody__', {
-                configurable: true,
-                enumerable: false,
-                value: string
-            });
-        }
-
-        // Cleanup regardless of cache option
-        req.emit(RAW_BODY_EVENT, err, string);
-        req.removeAllListeners(RAW_BODY_EVENT);
-    });
+    thunk(callback);
 }

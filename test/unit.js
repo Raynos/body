@@ -15,8 +15,8 @@ test('caching works', function t(assert) {
 
     var done = after(2, assert.end.bind(assert));
 
-    body(request, response, { cache: true }, function onBody() {
-        assert.equal(request.__rawBody__, 'thisbody', 'raw body has been set');
+    body(request, response, { cache: true }, function onBody(err, body) {
+        assert.equal(body, 'thisbody', 'raw body has been set');
         assert.pass('body is parsed');
         done();
     });

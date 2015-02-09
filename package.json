@@ -17,6 +17,7 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
+    "continuable-cache": "^0.3.1",
     "error": "~2.0.4",
     "raw-body": "~1.1.0",
     "safe-json-parse": "~1.0.1"
