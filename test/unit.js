@@ -31,3 +31,30 @@ test('caching works', function t(assert) {
 
     request.end('thisbody');
 });
+
+test('parallel caching works', function t(assert) {
+    var request = hammock.Request({
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        url: '/somewhere'
+    });
+    request.end('thisbody');
+    var response = hammock.Response();
+
+    var done = after(5, function() {
+        process.nextTick(function() {
+            assert.equal(request.listeners('rawBody').length, 0, 'rawBody listeners cleared');
+            assert.end();
+        });
+    });
+
+    for (var i = 0; i < 5; ++i) {
+        body(request, response, { cache: true }, function onBody(err, body) {
+            assert.equal(body, 'thisbody', 'raw body has been set');
+            assert.pass('body is parsed');
+            done();
+        });
+    }
+});
