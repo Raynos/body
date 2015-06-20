@@ -7,9 +7,10 @@ var formBody = require("./form.js")
 var jsonType = "application/json"
 var formType = "application/x-www-form-urlencoded"
 var INVALID_CONTENT_TYPE = TypedError({
-    message: "Could not parse content type header: %s",
+    message: "Could not parse content type header: {contentType}",
     type: "invalid.content.type",
-    statusCode: 415
+    statusCode: 415,
+    contentType: null
 })
 
 module.exports = anyBody
@@ -32,6 +33,6 @@ function anyBody(req, res, opts, callback) {
     } else if (contentType.indexOf(formType) !== -1) {
         formBody(req, res, opts, callback)
     } else {
-        callback(INVALID_CONTENT_TYPE(contentType))
+        callback(INVALID_CONTENT_TYPE({contentType: contentType}))
     }
 }
