@@ -1,4 +1,4 @@
-# body [![build status][1]][2]
+# body [![build status][1]][2] [![bitHound Score][3]][4] [![bitHound Dependencies][5]][6] [![bitHound Dev Dependencies][7]][8]
 
 Body parsing
 
@@ -106,12 +106,12 @@ textBody := (
 It will read the entire content of the stream into memory and
 give it back to you in the callback.
 
- - `limit`: You can set `opts.limit` to a custom number to change the 
+ - `limit`: You can set `opts.limit` to a custom number to change the
     limit at which `textBody` gives up. By default it will only
     read a 1MB body, if a stream contains more then 1MB it returns
     an error. This prevents someone attacking your HTTP server
     with an infinite body causing an out of memory attack.
- - `encoding`: You can set `encoding`. All encodings that are valid on a 
+ - `encoding`: You can set `encoding`. All encodings that are valid on a
     [`Buffer`](http://nodejs.org/api/buffer.html#buffer_buffer) are
     valid options. It defaults to `'utf8'`
 
@@ -156,8 +156,8 @@ encoded and parses just like it was a &lt;form&gt; submit.
 
  - `limit`: same as `textBody`
  - `encoding`: same as `textBody`
- - `querystring`: You can pass a custom querystring parser if 
-    you want. It should have a `parse` method that takes a 
+ - `querystring`: You can pass a custom querystring parser if
+    you want. It should have a `parse` method that takes a
     string and a callback. It should return the value in the
     callback or a parsing error
 
@@ -252,7 +252,7 @@ anyBody := (
 ) => void
 ```
 
-`anyBody` allows you to get the body of a HTTPRequest. It 
+`anyBody` allows you to get the body of a HTTPRequest. It
 does the same as `textBody` except it parses the `content-type`
 header and uses either the jsonBody or the formBody function.
 
@@ -301,3 +301,12 @@ http.createServer(function (req, res) {
 
   [1]: https://secure.travis-ci.org/Raynos/body.png
   [2]: http://travis-ci.org/Raynos/body
+
+  [3]: https://www.bithound.io/github/Raynos/body/badges/score.svg
+  [4]: https://www.bithound.io/github/Raynos/body
+
+  [5]: https://www.bithound.io/github/Raynos/body/badges/dependencies.svg
+  [6]: https://www.bithound.io/github/Raynos/body/master/dependencies/npm
+
+  [7]: https://www.bithound.io/github/Raynos/body/badges/devDependencies.svg
+  [8]: https://www.bithound.io/github/Raynos/body/master/dependencies/npm
