@@ -4,7 +4,7 @@ var parseArguments = require("./parse-arguments.js")
 var jsonBody = require("./json.js")
 var formBody = require("./form.js")
 
-var jsonType = "application/json"
+var jsonTypeRegex = /application\/(.*\+)?json/
 var formType = "application/x-www-form-urlencoded"
 var INVALID_CONTENT_TYPE = TypedError({
     message: "Could not parse content type header: {contentType}",
@@ -27,8 +27,7 @@ function anyBody(req, res, opts, callback) {
     }
 
     var contentType = req.headers["content-type"] || ""
-
-    if (contentType.indexOf(jsonType) !== -1) {
+    if (jsonTypeRegex.test(jsonType)) {
         jsonBody(req, res, opts, callback)
     } else if (contentType.indexOf(formType) !== -1) {
         formBody(req, res, opts, callback)
