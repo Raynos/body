@@ -1,8 +1,11 @@
+var stream = require("stream")
+
 module.exports = parseArguments
 
-function isWritable(stream) {
-    return typeof stream.write === "function" &&
-        typeof stream.end === "function"
+function isWritable(streamToCheck) {
+    return streamToCheck instanceof stream.Stream &&
+        typeof streamToCheck.write === "function" &&
+        typeof streamToCheck.end === "function"
 }
 
 function parseArguments(req, res, opts, callback) {
