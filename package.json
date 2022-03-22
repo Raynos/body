@@ -30,12 +30,7 @@
     "tape": "~2.3.0",
     "process": "~0.5.1"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://github.com/Raynos/body/raw/master/LICENSE"
-    }
-  ],
+  "license": : "MIT",
   "scripts": {
     "test": "node ./test/index.js"
   }
